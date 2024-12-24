@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Directory</title>
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Main container for centering the content -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Heading -->
+        <h1 class="text-4xl font-semibold text-center mb-8 text-gray-800">Employee Directory</h1>
+
+        <!-- Button to add new employee -->
+        <div class="text-center mb-6">
+            <a href="{{ url_for('add_employee') }}" class="bg-blue-500 text-white px-6 py-3 rounded-lg text-xl hover:bg-blue-600 transition">Add New Employee</a>
+        </div>
+
+        <!-- Fire All Employees Button -->
+        <div class="text-center mb-6">
+            <a href="{{ url_for('fire_all_employees') }}" class="bg-red-500 text-white px-6 py-3 rounded-lg text-xl hover:bg-red-600 transition">Fire All Employees</a>
+        </div>
+
+        <!-- Employee list -->
+        <ul class="space-y-4">
+            {% for employee in employees %}
+                <li class="flex justify-between items-center bg-white shadow-md rounded-lg p-4">
+                    <!-- Employee name and position -->
+                    <span class="text-lg font-semibold text-gray-800">{{ employee[1] }} - {{ employee[2] }}</span>
+                    
+                    <!-- Edit and Delete buttons -->
+                    <div class="space-x-2">
+                        <a href="{{ url_for('edit_employee', id=employee[0]) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md text-sm hover:bg-yellow-600 transition">Edit</a>
+                        <a href="{{ url_for('delete_employee', id=employee[0]) }}" class="bg-red-500 text-white px-4 py-2 rounded-md text-sm hover:bg-red-600 transition">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>
