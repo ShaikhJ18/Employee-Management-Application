@@ -17,11 +17,9 @@ function App() {
           {/* Define your routes */}
           <Route path="/" element={<EmployeeDirectory />} />
           <Route path="/add-employee" element={<AddEmployee />} />
-          <Route path='/EditEmployee' element={<EditEmployee/>}/>
+          <Route path='/EditEmployee/:id' element={<EditEmployee/>}/>
           <Route path='/EmployeeDetails/:id' element={<EmployeeDetails/>}/>
           <Route path='/PerformanceGraphs' element={<PerformanceGraphs/>}/>
-
-
         </Routes>
       </Router>
     );

@@ -101,7 +101,7 @@ const EmployeeDirectory = () => {
   };
 
   const handleEdit = (id) => {
-    navigate('/EditEmployee');
+    navigate(`/EditEmployee/${id}`);
   };
 
   const handleViewDetails = (id) => {

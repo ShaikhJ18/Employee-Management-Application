@@ -229,6 +229,47 @@ def fireAllEmployees():
     # Return the updated list of employees (empty list after firing all employees)
     return jsonify(employee_list)
 
+
+@app.route('/updateEmployee/<int:id>', methods=['PUT'])
+def update_employee(id):
+    data = request.json  # Get JSON data from the request
+
+    # Extract data from the request
+    name = data.get('name')
+    position = data.get('position')
+    gender = data.get('gender')
+    email = data.get('email')
+    phone = data.get('phone')
+    address = data.get('address')
+    emergency_contact = data.get('emergencyContact')
+    emergency_contact_phone = data.get('emergencyContactPhone')
+    salary = data.get('salary')
+    hire_date = data.get('hireDate')
+    department = data.get('department')
+    performance_rating = data.get('performance_rating', 3)  # Default to 3 if not provided
+
+    # Update the employee in the database by their ID
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Prepare the update query
+    cursor.execute(''' 
+        UPDATE employees
+        SET 
+            name = ?, position = ?, gender = ?, email = ?, phone = ?, address = ?, emergency_contact = ?, 
+            emergency_contact_phone = ?, salary = ?, hire_date = ?, department = ?, performance_rating = ?
+        WHERE id = ?
+    ''', (
+        name, position, gender, email, phone, address, emergency_contact, emergency_contact_phone,
+        salary, hire_date, department, performance_rating, id
+    ))
+
+    # Commit the changes and close the connection
+    conn.commit()
+    conn.close()
+
+    return jsonify({"message": f"Employee with id {id} updated successfully!"}), 200
+
 if __name__ == '__main__':
     init_db()
     populate_lots(10)  # Populate some fake data
