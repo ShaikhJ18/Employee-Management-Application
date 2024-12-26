@@ -35,9 +35,11 @@ def init_db():
                 emergency_contact_phone TEXT NOT NULL,
                 salary REAL NOT NULL,
                 hire_date TEXT NOT NULL,
-                department TEXT NOT NULL
+                department TEXT NOT NULL,
+                performance_rating INTEGER DEFAULT 3  -- Default to 3 (Meets Expectations)
             )
         ''')
+
         # Create users table
         conn.execute('''
             CREATE TABLE IF NOT EXISTS users (
@@ -69,7 +71,7 @@ def test_with_fake_data():
     
     phone = f"+1-{randint(100, 999)}-{randint(1000000, 9999999)}"
     address = f"1234 {choice(['Elm St', 'Oak St', 'Maple Ave', 'Pine Blvd'])}, Cityville, State {randint(1000, 9999)}"
-    
+    performance = randint(1,5)
     # Open a database connection
     conn = get_db()
     cursor = conn.cursor()
@@ -78,11 +80,11 @@ def test_with_fake_data():
     cursor.execute('''
         INSERT INTO employees (
             name, position, gender, email, phone, address, emergency_contact, emergency_contact_phone, 
-            salary, hire_date, department
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            salary, hire_date, department, performance_rating
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
     ''', (
         name, position, gender, email, phone, address, emergency_contact, emergency_contact_phone, 
-        salary, hire_date, department
+        salary, hire_date, department, performance
     ))
     
     # Commit the transaction
@@ -125,7 +127,7 @@ def get_employee_details(id):
         conn.close()
         
         if employee:
-            # Convert the tuple into a dictionary
+            # Convert the tuple into a dictionary and include performance_rating
             return jsonify({
                 'id': employee[0],
                 'name': employee[1],
@@ -138,12 +140,14 @@ def get_employee_details(id):
                 'emergency_contact_phone': employee[8],
                 'salary': employee[9],
                 'hire_date': employee[10],
-                'department': employee[11]
+                'department': employee[11],
+                'performance_rating': employee[12]  # Add performance_rating field
             })
         else:
             return jsonify({'error': 'Employee not found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
     
 
 @app.route('/addEmployee', methods=['POST'])
@@ -162,23 +166,25 @@ def add_employee():
     salary = data.get('salary')
     hire_date = data.get('hireDate')
     department = data.get('department')
+    performance_rating = data.get('performance_rating', 3)  # Default to 3 if not provided
 
     # Insert into the employees table
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute('''
+    cursor.execute(''' 
         INSERT INTO employees (
             name, position, gender, email, phone, address, emergency_contact, emergency_contact_phone, 
-            salary, hire_date, department
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            salary, hire_date, department, performance_rating
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         name, position, gender, email, phone, address, emergency_contact, emergency_contact_phone, 
-        salary, hire_date, department
+        salary, hire_date, department, performance_rating
     ))
     conn.commit()
     conn.close()
 
     return jsonify({"message": "Employee added successfully!"}), 201
+
 
 @app.route('/getAllEmployees')
 def getAllEmployees():
@@ -192,7 +198,7 @@ def getAllEmployees():
     
     # Convert the employee data to a list of dictionaries
     employee_list = [
-        {"id": employee[0], "name": employee[1], "position": employee[2]}  # Assuming a basic schema
+        {"id": employee[0], "name": employee[1], "position": employee[2], "performance_rating": employee[12]}  # Assuming a basic schema
         for employee in employees
     ]
     
