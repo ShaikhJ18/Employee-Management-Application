@@ -6,6 +6,7 @@ import viteLogo from '/vite.svg'
 import EditEmployee from './EditEmployee'
 import EmployeeDetails from './EmployeeDetails'
 import EmployeeDirectory from './EmployeeDirectory'
+import PerformanceGraphs from './PerformanceGraphs'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,6 +19,9 @@ function App() {
           <Route path="/add-employee" element={<AddEmployee />} />
           <Route path='/EditEmployee' element={<EditEmployee/>}/>
           <Route path='/EmployeeDetails/:id' element={<EmployeeDetails/>}/>
+          <Route path='/PerformanceGraphs' element={<PerformanceGraphs/>}/>
+
+
         </Routes>
       </Router>
     );

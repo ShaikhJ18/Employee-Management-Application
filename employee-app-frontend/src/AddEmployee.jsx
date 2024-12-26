@@ -6,17 +6,36 @@ import { useNavigate } from 'react-router-dom';  // Import useNavigate for routi
 
 // Form validation schema with Yup
 const validationSchema = Yup.object({
-  name: Yup.string().required('Name is required'),
-  email: Yup.string().email('Invalid email address').required('Email is required'),
-  phone: Yup.string().required('Phone number is required'),
-  salary: Yup.number().required('Salary is required').positive('Salary must be positive'),
+  name: Yup.string()
+    .max(50, 'Name must be at most 50 characters')
+    .required('Name is required'),
+  email: Yup.string()
+    .email('Invalid email address')
+    .required('Email is required'),
+  phone: Yup.string()
+    .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits')
+    .required('Phone number is required'),
+  salary: Yup.number()
+    .required('Salary is required')
+    .positive('Salary must be positive')
+    .max(200000, 'Salary cannot exceed $200,000'),
   hireDate: Yup.date().required('Hire date is required'),
   department: Yup.string().required('Department is required'),
   position: Yup.string().required('Position is required'),
   gender: Yup.string().required('Gender is required'),
-  emergencyContact: Yup.string().required('Emergency contact is required'),
-  emergencyContactPhone: Yup.string().required('Emergency contact phone is required'),
-  address: Yup.string().required('Address is required'),
+  emergencyContact: Yup.string()
+    .max(50, 'Emergency contact name must be at most 50 characters')
+    .required('Emergency contact is required'),
+  emergencyContactPhone: Yup.string()
+    .matches(/^[0-9]{10}$/, 'Emergency contact phone must be exactly 10 digits')
+    .required('Emergency contact phone is required'),
+  address: Yup.string()
+    .max(200, 'Address must be at most 200 characters')
+    .required('Address is required'),
+  performance_rating: Yup.number()
+    .required('Performance rating is required')
+    .min(1, 'Rating must be between 1 and 5')
+    .max(5, 'Rating must be between 1 and 5')
 });
 
 const AddEmployee = () => {
@@ -34,6 +53,7 @@ const AddEmployee = () => {
     salary: '',
     hireDate: '',
     department: 'Engineering',  // Default department
+    performance_rating: 3,  // Default performance rating (middle of the scale)
   };
 
   const handleSubmit = (values) => {
@@ -64,8 +84,8 @@ const AddEmployee = () => {
         onSubmit={handleSubmit}
       >
         {({ setFieldValue }) => (
-          <Form className="bg-white p-6 rounded-lg shadow-lg">
-            {/* Field for each input, including error message */}
+          <Form className="bg-white p-6 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Fields in a two-column grid */}
             <div className="mb-6">
               <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Enter Name</label>
               <Field
@@ -193,6 +213,19 @@ const AddEmployee = () => {
                 <option value="Finance">Finance</option>
               </Field>
               <ErrorMessage name="department" component="p" className="text-red-500 text-sm mt-1" />
+            </div>
+
+            {/* Performance Rating (1-5) */}
+            <div className="mb-6">
+              <label htmlFor="performance_rating" className="block text-gray-700 font-medium mb-2">Performance Rating</label>
+              <Field as="select" name="performance_rating" className="form-input w-full p-3 border border-gray-300 rounded-md">
+                <option value={1}>1 - Poor</option>
+                <option value={2}>2 - Below Average</option>
+                <option value={3}>3 - Average</option>
+                <option value={4}>4 - Good</option>
+                <option value={5}>5 - Excellent</option>
+              </Field>
+              <ErrorMessage name="performance_rating" component="p" className="text-red-500 text-sm mt-1" />
             </div>
 
             <div className="flex justify-center">

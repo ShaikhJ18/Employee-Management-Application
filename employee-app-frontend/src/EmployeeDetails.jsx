@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom'; // Import the useParams and useNavigate hooks
+import { FaEnvelope, FaPhone, FaMapMarkedAlt, FaUserTie, FaCalendarAlt, FaDollarSign, FaUserShield } from 'react-icons/fa'; // Import icons
 
 const EmployeeDetails = () => {
   const { id } = useParams(); // Extract the employee ID from the URL
@@ -45,43 +46,70 @@ const EmployeeDetails = () => {
       </button>
 
       <h1 className="text-4xl font-semibold text-center mb-12 text-gray-900">Employee Details</h1>
-      <div className="bg-white p-6 rounded-xl shadow-lg space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-900">{employee.name}</h2>
-        <p className="text-xl text-gray-500">{employee.position}</p>
-        
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-gray-900">Email:</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-xl shadow-lg">
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <FaUserTie className="text-gray-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Name:</h3>
+          </div>
+          <p className="text-gray-700">{employee.name}</p>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <FaUserTie className="text-gray-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Position:</h3>
+          </div>
+          <p className="text-gray-700">{employee.position}</p>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <FaEnvelope className="text-gray-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Email:</h3>
+          </div>
           <p className="text-gray-700">{employee.email}</p>
         </div>
 
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-gray-900">Phone:</h3>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <FaPhone className="text-gray-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Phone:</h3>
+          </div>
           <p className="text-gray-700">{employee.phone}</p>
         </div>
 
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-gray-900">Address:</h3>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <FaMapMarkedAlt className="text-gray-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Address:</h3>
+          </div>
           <p className="text-gray-700">{employee.address}</p>
         </div>
 
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-gray-900">Department:</h3>
-          <p className="text-gray-700">{employee.department}</p>
-        </div>
-
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-gray-900">Emergency Contact:</h3>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <FaUserShield className="text-gray-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Emergency Contact:</h3>
+          </div>
           <p className="text-gray-700">{employee.emergency_contact}</p>
           <p className="text-gray-700">{employee.emergency_contact_phone}</p>
         </div>
 
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-gray-900">Hire Date:</h3>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <FaCalendarAlt className="text-gray-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Hire Date:</h3>
+          </div>
           <p className="text-gray-700">{employee.hire_date}</p>
         </div>
 
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-gray-900">Salary:</h3>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <FaDollarSign className="text-gray-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Salary:</h3>
+          </div>
           <p className="text-gray-700">${employee.salary.toFixed(2)}</p>
         </div>
       </div>
