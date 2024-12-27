@@ -19,14 +19,14 @@ const validationSchema = Yup.object({
     .required('Salary is required')
     .positive('Salary must be positive')
     .max(200000, 'Salary cannot exceed $200,000'),
-  hireDate: Yup.date().required('Hire date is required'),
+  hire_date: Yup.date().required('Hire date is required'),
   department: Yup.string().required('Department is required'),
   position: Yup.string().required('Position is required'),
   gender: Yup.string().required('Gender is required'),
-  emergencyContact: Yup.string()
+  emergency_contact: Yup.string()
     .max(50, 'Emergency contact name must be at most 50 characters')
     .required('Emergency contact is required'),
-  emergencyContactPhone: Yup.string()
+  emergency_contact_phone: Yup.string()
     .matches(/^[0-9]{10}$/, 'Emergency contact phone must be exactly 10 digits')
     .required('Emergency contact phone is required'),
   address: Yup.string()
@@ -161,27 +161,27 @@ const EditEmployee = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor="emergencyContact" className="block text-gray-700 font-medium mb-2">Enter Emergency Contact Name</label>
+              <label htmlFor="emergency_contact" className="block text-gray-700 font-medium mb-2">Enter Emergency Contact Name</label>
               <Field
                 type="text"
-                id="emergencyContact"
-                name="emergencyContact"
+                id="emergency_contact"
+                name="emergency_contact"
                 className="form-input w-full p-3 border border-gray-300 rounded-md"
                 placeholder="Enter Emergency Contact Name"
               />
-              <ErrorMessage name="emergencyContact" component="p" className="text-red-500 text-sm mt-1" />
+              <ErrorMessage name="emergency_contact" component="p" className="text-red-500 text-sm mt-1" />
             </div>
 
             <div className="mb-6">
-              <label htmlFor="emergencyContactPhone" className="block text-gray-700 font-medium mb-2">Enter Emergency Contact Phone</label>
+              <label htmlFor="emergency_contact_phone" className="block text-gray-700 font-medium mb-2">Enter Emergency Contact Phone</label>
               <Field
                 type="text"
-                id="emergencyContactPhone"
-                name="emergencyContactPhone"
+                id="emergency_contact_phone"
+                name="emergency_contact_phone"
                 className="form-input w-full p-3 border border-gray-300 rounded-md"
                 placeholder="Enter Emergency Contact Phone"
               />
-              <ErrorMessage name="emergencyContactPhone" component="p" className="text-red-500 text-sm mt-1" />
+              <ErrorMessage name="emergency_contact_phone" component="p" className="text-red-500 text-sm mt-1" />
             </div>
 
             <div className="mb-6">
@@ -197,14 +197,14 @@ const EditEmployee = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor="hireDate" className="block text-gray-700 font-medium mb-2">Enter Hire Date</label>
+              <label htmlFor="hire_date" className="block text-gray-700 font-medium mb-2">Enter Hire Date</label>
               <Field
                 type="date"
-                id="hireDate"
-                name="hireDate"
+                id="hire_date"
+                name="hire_date"
                 className="form-input w-full p-3 border border-gray-300 rounded-md"
               />
-              <ErrorMessage name="hireDate" component="p" className="text-red-500 text-sm mt-1" />
+              <ErrorMessage name="hire_date" component="p" className="text-red-500 text-sm mt-1" />
             </div>
 
             <div className="mb-6">
