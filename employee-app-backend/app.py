@@ -241,10 +241,10 @@ def update_employee(id):
     email = data.get('email')
     phone = data.get('phone')
     address = data.get('address')
-    emergency_contact = data.get('emergencyContact')
-    emergency_contact_phone = data.get('emergencyContactPhone')
+    emergency_contact = data.get('emergency_contact')
+    emergency_contact_phone = data.get('emergency_contact_phone')
     salary = data.get('salary')
-    hire_date = data.get('hireDate')
+    hire_date = data.get('hire_date')
     department = data.get('department')
     performance_rating = data.get('performance_rating', 3)  # Default to 3 if not provided
 
@@ -272,5 +272,5 @@ def update_employee(id):
 
 if __name__ == '__main__':
     init_db()
-    populate_lots(10)  # Populate some fake data
+    populate_lots(100)  # Populate some fake data
     app.run(debug=True)
