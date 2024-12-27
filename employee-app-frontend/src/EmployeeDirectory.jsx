@@ -30,6 +30,14 @@ const EmployeeDirectory = () => {
       });
   }, []);
 
+  useEffect(() => {
+    // Filter employees based on searchTerm
+    const filtered = employees.filter((employee) =>
+      employee.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredEmployees(filtered);
+  }, [searchTerm, employees]);  // Re-run when searchTerm or employees change
+
   const handleFilterHighPerformers = () => {
     const highPerformers = employees.filter(employee => employee.performance_rating >= 4);
     setFilteredEmployees(highPerformers);
@@ -110,26 +118,26 @@ const EmployeeDirectory = () => {
 
   const getPerformanceFaceAndColor = (rating) => {
     let face = '🙂'; // Default neutral face
-    let cardColor = 'bg-yellow-500'; // Default neutral color
+    let borderColor = 'border-yellow-500'; // Default neutral color
 
     switch (true) {
       case rating <= 2:
         face = '😞';
-        cardColor = 'bg-red-600'; // Red for poor performance
+        borderColor = 'border-red-400'; // Red for poor performance
         break;
       case rating === 3:
         face = '🙂';
-        cardColor = 'bg-yellow-500'; // Yellow for neutral performance
+        borderColor = 'border-yellow-400'; // Yellow for neutral performance
         break;
       case rating >= 4:
         face = '😊';
-        cardColor = 'bg-green-600'; // Green for excellent performance
+        borderColor = 'border-green-400'; // Green for excellent performance
         break;
       default:
         break;
     }
 
-    return { face, cardColor };
+    return { face, borderColor };
   };
 
   if (loading) {
@@ -145,13 +153,14 @@ const EmployeeDirectory = () => {
       <h1 className="text-4xl font-semibold text-center mb-12 text-blue-600">Welcome To TeamFlow 🌊</h1>
 
       <div className="mb-6 flex justify-center">
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="py-2 px-4 border rounded-md w-1/2 text-blue-500"
-        />
+      <input
+  type="text"
+  placeholder="Search by name..."
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}  // Update searchTerm on input change
+  className="py-2 px-4 border rounded-md w-1/2 text-blue-500"
+/>
+
       </div>
 
       <div className="flex flex-row justify-center space-x-4 mb-6">
@@ -257,54 +266,56 @@ const EmployeeDirectory = () => {
           <div className="text-center text-gray-500 col-span-4">Get Started By Adding Your First Employee</div>
         ) : (
           filteredEmployees.map((employee) => {
-            const { face, cardColor } = getPerformanceFaceAndColor(employee.performance_rating);
+            const { face, borderColor } = getPerformanceFaceAndColor(employee.performance_rating);
 
             return (
               <div
-                key={employee.id}
-                className={`${cardColor} p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col justify-between items-center space-y-4`}
-              >
-                {/* Employee Image */}
-                <img
-                  src={employee.profileImage || 'https://i.kym-cdn.com/photos/images/original/001/896/761/b9a.png'} // Default placeholder image if no image is provided
-                  alt={employee.name}
-                  className="w-24 h-24 rounded-full object-cover mb-4"
-                />
-                <div className="text-center text-white">
-                  <p className="text-xl font-semibold">{employee.name}</p>
-                  <p className="text-gray-500">{employee.position}</p>
+  key={employee.id}
+  className="bg-blue-900 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col justify-between items-center space-y-4 border-10"
+  style={{ borderColor: borderColor}} // Apply dynamic border color
+>
+  {/* Employee Image */}
+  <img
+    src={employee.profileImage || 'https://i.kym-cdn.com/photos/images/original/001/896/761/b9a.png'} // Default placeholder image if no image is provided
+    alt={employee.name}
+    className="w-24 h-24 rounded-full object-cover mb-4"
+  />
+  <div className="text-center text-white">
+    <p className="text-xl font-bold">{employee.name}</p>
+    <p className="text-white-500 font-bold">{employee.position}</p>
 
-                  {/* Performance Rating with Face */}
-                  <div className="mt-2 text-yellow-300">
-                    <span>Performance: {employee.performance_rating}</span>
-                    <span className="ml-2 text-2xl">{face}</span>
-                  </div>
-                </div>
+    {/* Performance Rating with Face */}
+    <div className="mt-2 text-white-300 font-bold">
+      <span>Performance: {employee.performance_rating}</span>
+      <span className="ml-2 text-2xl">{face}</span>
+    </div>
+  </div>
 
-                <div className="space-x-4 flex justify-center w-full">
-                  <button
-                    onClick={() => handleEdit(employee.id)}
-                    className="bg-blue-600 text-white py-1 px-3 rounded-full text-sm font-medium shadow-sm hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
-                  >
-                    <PencilIcon className="w-5 h-5" />
-                    <span>Edit</span>
-                  </button>
-                  <button
-                    onClick={() => handleDelete(employee)}
-                    className="bg-red-600 text-white py-1 px-3 rounded-full text-sm font-medium shadow-sm hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2"
-                  >
-                    <TrashIcon className="w-5 h-5" />
-                    <span>Delete</span>
-                  </button>
-                  <button
-                    onClick={() => handleViewDetails(employee.id)}
-                    className="bg-yellow-600 text-white py-1 px-3 rounded-full text-sm font-medium shadow-sm hover:bg-yellow-700 transition-colors duration-200 flex items-center space-x-2"
-                  >
-                    <EyeIcon className="w-5 h-5" />
-                    <span>View</span>
-                  </button>
-                </div>
-              </div>
+  <div className="space-x-1 flex justify-center w-full">
+    <button
+      onClick={() => handleEdit(employee.id)}
+      className="bg-blue-600 text-white py-1 px-3 rounded-full text-sm font-medium shadow-sm hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
+    >
+      <PencilIcon className="w-5 h-5" />
+      <span>Edit</span>
+    </button>
+    <button
+      onClick={() => handleDelete(employee)}
+      className="bg-red-600 text-white py-1 px-3 rounded-full text-sm font-medium shadow-sm hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2"
+    >
+      <TrashIcon className="w-5 h-5" />
+      <span>Delete</span>
+    </button>
+    <button
+      onClick={() => handleViewDetails(employee.id)}
+      className="bg-yellow-600 text-white py-1 px-3 rounded-full text-sm font-medium shadow-sm hover:bg-yellow-700 transition-colors duration-200 flex items-center space-x-2"
+    >
+      <EyeIcon className="w-5 h-5" />
+      <span>View</span>
+    </button>
+  </div>
+</div>
+
             );
           })
         )}
