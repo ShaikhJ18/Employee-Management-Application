@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon, PencilIcon, EyeIcon, XIcon, CheckIcon, PlusIcon, FilterIcon } from '@heroicons/react/outline'; // Importing icons
-
+import Papa from 'papaparse'
 const EmployeeDirectory = () => {
   const [employees, setEmployees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -139,6 +139,25 @@ const EmployeeDirectory = () => {
 
     return { face, borderColor };
   };
+    // Function to export employees to CSV
+    const exportToCSV = () => {
+      const employeesToExport = employees.map((employee) => ({
+        id: employee.id,
+        Name: employee.name,
+        performance: employee.performance_rating,
+        position: employee.position,
+      }));
+  
+      // Convert the data to CSV format using PapaParse
+      const csv = Papa.unparse(employeesToExport);
+  
+      //Create a download link and trigger a click event to download the CSV file
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'employees.csv';
+      link.click();
+    };
 
   if (loading) {
     return <div className="text-center text-gray-500">Loading...</div>;
@@ -205,6 +224,12 @@ const EmployeeDirectory = () => {
           className="bg-purple-600 text-white py-1 px-3 rounded-full text-sm font-medium shadow-sm hover:bg-purple-700 transition-colors duration-200 flex items-center space-x-2"
         >
           Performance Graphs
+        </button>
+        <button
+        onClick={exportToCSV}
+        className='bg-orange-600 text-white py-1 px-3 rounded-full text-sm font-medium shadow-sm hover:bg-orange-700 transition-colors duration-200 flex items-center space-x-2'
+        >
+          Export CSV
         </button>
       </div>
 
