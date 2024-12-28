@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from flask_cors import CORS
 import secrets
+from faker import Faker
 from datetime import datetime
 from random import choice, randint
 
@@ -49,55 +50,51 @@ def init_db():
             )
         ''')
 
-def test_with_fake_data():
-    # Fake data for testing
-    names = ["John Smith", "Alice Johnson", "Bob Brown", "Emily White", "Michael Green"]
-    positions = ["Software Engineer", "HR Manager", "Product Manager", "Designer", "Data Analyst"]
-    genders = ["Male", "Female", "Other"]
-    departments = ["Engineering", "HR", "Marketing", "Sales", "Finance"]
+def create_fake_employee(amount: int):
+    genders = ["male","female","other"]
+    department = ["Engineering","Sales","Marketing","HR","Finance"]
+    domains = ["@gmail.com","@yahoo.com","@outlook.com","@"]
+    jobs = ["Software Engineer", "Product Manager", "HR Manager", "Supervisor", "Janitor"]
+    for i in range(0,amount):
+        fake = Faker()
+        name = fake.name()
+        fullname = name.split(" ")
+        first_name = fullname[0]
+        last_name = fullname[1]
+        email = first_name[0].lower() + last_name[:4].lower() + choice(domains)
+        position = choice(jobs)
+        gender = choice(genders)
+        salary = round(randint(40000, 120000) + randint(0, 99) / 100, 2)  # Random salary between 40,000 to 120,000
+        hire_date = fake.date_this_year()
+        department = choice(department)
+        emergency_contact = fake.name()
+        emergency_contact_phone = fake.phone_number()
     
-    # Randomly generate fake data
-    name = choice(names)
-    position = choice(positions)
-    gender = choice(genders)
-    email = f"{name.replace(' ', '').lower()}@example.com"
-    salary = round(randint(40000, 120000) + randint(0, 99) / 100, 2)  # Random salary between 40,000 to 120,000
-    hire_date = datetime.now().strftime('%Y-%m-%d')
-    department = choice(departments)
-    
-    # Emergency contact and phone for fake data
-    emergency_contact = f"{name} Emergency"
-    emergency_contact_phone = f"+1-{randint(100, 999)}-{randint(1000000, 9999999)}"
-    
-    phone = f"+1-{randint(100, 999)}-{randint(1000000, 9999999)}"
-    address = f"1234 {choice(['Elm St', 'Oak St', 'Maple Ave', 'Pine Blvd'])}, Cityville, State {randint(1000, 9999)}"
-    performance = randint(1,5)
-    # Open a database connection
-    conn = get_db()
-    cursor = conn.cursor()
+        phone = fake.phone_number()
+        address = fake.address()
+        performance = randint(1,5)
+        # Open a database connection
+        conn = get_db()
+        cursor = conn.cursor()
 
-    # Insert the fake data into the `employees` table
-    cursor.execute('''
-        INSERT INTO employees (
+        # Insert the fake data into the `employees` table
+        cursor.execute('''
+            INSERT INTO employees (
             name, position, gender, email, phone, address, emergency_contact, emergency_contact_phone, 
             salary, hire_date, department, performance_rating
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
-    ''', (
+        ''', (
         name, position, gender, email, phone, address, emergency_contact, emergency_contact_phone, 
         salary, hire_date, department, performance
-    ))
+        ))
     
-    # Commit the transaction
-    conn.commit()
+        # Commit the transaction
+        conn.commit()
 
-    # Close the connection
-    conn.close()
+        # Close the connection
+        conn.close()
 
-    print("Fake employee data added successfully!")
-
-def populate_lots(amount: int):
-    for i in range(amount):
-        test_with_fake_data()
+        print("Fake employee data added successfully!")
 
 @app.route('/deleteEmployee/<int:id>', methods=['DELETE'])
 def delete_employee(id):
@@ -272,5 +269,5 @@ def update_employee(id):
 
 if __name__ == '__main__':
     init_db()
-    populate_lots(100)  # Populate some fake data
+    create_fake_employee(30) # Populate some fake data
     app.run(debug=True)
